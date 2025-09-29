@@ -1,0 +1,132 @@
+{
+  "colleges": [
+    {
+      "id": 1,
+      "name": "Government College for Women, M.A. Road, Srinagar",
+      "type": "Government",
+      "established": 1942,
+      "naac_grade": "A+",
+      "location": {
+        "address": "M.A. Road, Srinagar, Jammu and Kashmir 190001",
+        "district": "Srinagar",
+        "coordinates": {
+          "lat": 34.0837,
+          "lng": 74.7973
+        }
+      },
+      "programs": [
+        {
+          "level": "Undergraduate",
+          "name": "B.A.",
+          "duration": "3 years",
+          "specializations": ["History", "Political Science", "Economics", "English"],
+          "eligibility": "10+2 in any stream with minimum 45% marks",
+          "cutoff_2023": {
+            "general": 85,
+            "obc": 80,
+            "sc": 75,
+            "st": 70
+          },
+          "total_seats": 120,
+          "fees_per_year": 5000
+        },
+        {
+          "level": "Undergraduate",
+          "name": "B.Sc.",
+          "duration": "3 years",
+          "specializations": ["Mathematics", "Physics", "Chemistry", "Botany", "Zoology"],
+          "eligibility": "10+2 with Science stream with minimum 50% marks",
+          "cutoff_2023": {
+            "general": 88,
+            "obc": 83,
+            "sc": 78,
+            "st": 73
+          },
+          "total_seats": 90,
+          "fees_per_year": 6000
+        }
+      ],
+      "facilities": ["Library", "Computer Lab", "Sports", "Hostel", "Cafeteria", "Auditorium", "Medical"],
+      "admission_process": [
+        "Online application through JKBOPEE portal",
+        "Merit-based selection",
+        "Document verification",
+        "Fee payment"
+      ],
+      "contact": {
+        "phone": "0194-2450001",
+        "email": "gcwsrinagar@jkeducation.gov.in",
+        "website": "http://www.gcwsrinagar.edu.in"
+      },
+      "scholarships": ["PMSSS", "Merit Scholarship", "Minority Scholarship"],
+      "rating": 4.2,
+      "reviews": 45,
+      "image_url": "/static/images/colleges/gcw_srinagar.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Government Degree College, Anantnag",
+      "type": "Government",
+      "established": 1960,
+      "naac_grade": "A",
+      "location": {
+        "address": "Khanabal Road, Anantnag, Jammu and Kashmir 192101",
+        "district": "Anantnag",
+        "coordinates": {
+          "lat": 33.7311,
+          "lng": 75.1500
+        }
+      },
+      "programs": [
+        {
+          "level": "Undergraduate",
+          "name": "B.Com",
+          "duration": "3 years",
+          "specializations": ["General", "Computer Applications", "Taxation"],
+          "eligibility": "10+2 in Commerce stream with minimum 45% marks",
+          "cutoff_2023": {
+            "general": 82,
+            "obc": 77,
+            "sc": 72,
+            "st": 67
+          },
+          "total_seats": 100,
+          "fees_per_year": 5500
+        },
+        {
+          "level": "Postgraduate",
+          "name": "M.A. English",
+          "duration": "2 years",
+          "specializations": ["English Literature", "Linguistics"],
+          "eligibility": "Bachelor's degree with English as main subject and minimum 50% marks",
+          "cutoff_2023": {
+            "general": 78,
+            "obc": 73,
+            "sc": 68,
+            "st": 63
+          },
+          "total_seats": 40,
+          "fees_per_year": 7000
+        }
+      ],
+      "facilities": ["Library", "Computer Lab", "Sports", "Hostel", "Cafeteria"],
+      "admission_process": [
+        "Online application through college website",
+        "Merit-based selection",
+        "Entrance test for PG courses",
+        "Document verification",
+        "Fee payment"
+      ],
+      "contact": {
+        "phone": "01932-222456",
+        "email": "gdc.anantnag@jkeducation.gov.in",
+        "website": "http://www.gdcanantnag.edu.in"
+      },
+      "scholarships": ["PMSSS", "State Merit Scholarship", "OBC Scholarship"],
+      "rating": 4.0,
+      "reviews": 32,
+      "image_url": "/static/images/colleges/gdc_anantnag.jpg"
+    }
+  ],
+  "districts": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Budgam", "Pulwama", "Kupwara", "Rajouri", "Kathua", "Udhampur", "Doda", "Poonch", "Ramban", "Reasi", "Samba", "Kishtwar", "Kulgam", "Shopian", "Bandipora", "Ganderbal", "Kargil", "Leh"]
+}

@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Career Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4caf50;
+            --info-color: #00b4d8;
+            --warning-color: #f9c74f;
+            --danger-color: #ef476f;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fb;
+            color: #333;
+            line-height: 1.6;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        
+        body.loaded {
+            opacity: 1;
+        }
+        
+        .sidebar {
+            background: linear-gradient(180deg, #4361ee 0%, #3f37c9 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            transform: translateX(-100%);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .sidebar.loaded {
+            transform: translateX(0);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 5px 0;
+            border-radius: 5px;
+            padding: 10px 15px;
+            transition: all 0.3s;
+            transform: translateX(-20px);
+            opacity: 0;
+        }
+        
+        .sidebar.loaded .nav-link {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .sidebar .nav-link:nth-child(1) { transition-delay: 0.1s; }
+        .sidebar .nav-link:nth-child(2) { transition-delay: 0.15s; }
+        .sidebar .nav-link:nth-child(3) { transition-delay: 0.2s; }
+        .sidebar .nav-link:nth-child(4) { transition-delay: 0.25s; }
+        .sidebar .nav-link:nth-child(5) { transition-delay: 0.3s; }
+        .sidebar .nav-link:nth-child(6) { transition-delay: 0.35s; }
+        .sidebar .nav-link:nth-child(7) { transition-delay: 0.4s; }
+        .sidebar .nav-link:nth-child(8) { transition-delay: 0.45s; }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .main-content {
+            padding: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease 0.3s;
+        }
+        
+        .main-content.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .card.animate-in {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 600;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            background-color: var(--primary-color);
+            transition: width 1.5s ease-in-out;
+            width: 0 !important;
+        }
+        
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .badge-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bg-primary-light {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s;
+        }
+        
+        .welcome-section.loaded {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 400px;
+            height: 400px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            z-index: 0;
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, 10px) rotate(5deg); }
+            50% { transform: translate(0, 20px) rotate(0deg); }
+            75% { transform: translate(-10px, 10px) rotate(-5deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover .stat-number {
+            transform: scale(1.1);
+        }
+        
+        .stat-card .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover .stat-label {
+            color: var(--primary-color);
+        }
+        
+        .skill-meter {
+            margin-bottom: 15px;
+        }
+        
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .event-card {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateX(5px);
+        }
+        
+        .event-card:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .event-date {
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover .event-date {
+            transform: scale(1.1);
+        }
+        
+        .event-date .day {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .event-date .month {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+        }
+        
+        .event-details {
+            flex-grow: 1;
+        }
+        
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .event-card:hover .event-title {
+            color: var(--primary-color);
+        }
+        
+        .event-meta {
+            font-size: 0.85rem;
+            color: #6c757d;
+            transition: all 0.3s ease;
+        }
+        
+        .btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            transform: translateZ(0);
+        }
+        
+        .btn:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-outline-primary:active {
+            transform: translateY(0);
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .link-underline {
+            position: relative;
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+        
+        .link-underline:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-color);
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .link-underline:hover:after {
+            visibility: visible;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                min-height: auto;
+                margin-bottom: 20px;
+                transform: none;
+                position: relative;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .welcome-section {
+                padding: 20px;
+            }
+            
+            .stat-card {
+                margin-bottom: 15px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="d-flex flex-column align-items-center mb-4">
+                    <div class="avatar mb-2">JS</div>
+                    <h6 class="mb-0">John Smith</h6>
+                    <small class="text-white-50">Class 12 - Science</small>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-graduation-cap"></i> My Learning
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-briefcase"></i> Career Matches
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-chart-line"></i> Skill Analysis
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-university"></i> College Finder
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-book"></i> Resources
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-calendar-alt"></i> Events
+                        </a>
+                    </li>
+                    <li class="nav-item mt-4">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-cog"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <div class="welcome-content">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h2>Welcome back, John! 👋</h2>
+                                <p class="mb-0">Here's what's happening with your career journey today.</p>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                <div class="badge bg-white text-primary p-2">Last Login: <span id="last-login">Just now</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="stat-card card-hover">
+                            <i class="fas fa-trophy text-primary mb-2"></i>
+                            <div class="stat-number">78%</div>
+                            <div class="stat-label">Career Readiness</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="stat-card card-hover">
+                            <i class="fas fa-book text-success mb-2"></i>
+                            <div class="stat-number">3</div>
+                            <div class="stat-label">Active Courses</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="stat-card card-hover">
+                            <i class="fas fa-calendar-check text-warning mb-2"></i>
+                            <div class="stat-number">5</div>
+                            <div class="stat-label">Upcoming Deadlines</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card card-hover">
+                            <i class="fas fa-star text-info mb-2"></i>
+                            <div class="stat-number">12</div>
+                            <div class="stat-label">Skills Mastered</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-lg-8">
+                        <!-- Recommended Streams -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.1s">
+                            <div class="card-header">
+                                <span>🎯 Your Top Recommended Streams</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Stream</th>
+                                                <th>Match Score</th>
+                                                <th>Key Strengths</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="animate-on-scroll" style="animation-delay: 0.2s">
+                                                <td><strong>Computer Science & IT</strong></td>
+                                                <td>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 92%;" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small>92%</small>
+                                                </td>
+                                                <td>Logical Reasoning, Problem-Solving</td>
+                                                <td><a href="#" class="btn btn-sm btn-outline-primary">Details</a></td>
+                                            </tr>
+                                            <tr class="animate-on-scroll" style="animation-delay: 0.3s">
+                                                <td><strong>Engineering</strong></td>
+                                                <td>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 85%;" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small>85%</small>
+                                                </td>
+                                                <td>Mathematics, Analytical Skills</td>
+                                                <td><a href="#" class="btn btn-sm btn-outline-primary">Details</a></td>
+                                            </tr>
+                                            <tr class="animate-on-scroll" style="animation-delay: 0.4s">
+                                                <td><strong>Commerce</strong></td>
+                                                <td>
+                                                    <div class="progress" style="height: 8px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 78%;" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                    <small>78%</small>
+                                                </td>
+                                                <td>Numerical Ability, Business Acumen</td>
+                                                <td><a href="#" class="btn btn-sm btn-outline-primary">Details</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Learning Path -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.2s">
+                            <div class="card-header">
+                                <span>📚 Your Learning Path</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="mb-3">Current Focus: Web Development Fundamentals</h5>
+                                
+                                <div class="mb-3">
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>Progress: 65% complete</span>
+                                        <span>Next: JavaScript Advanced</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4 mb-3">Recommended Resources:</h6>
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge bg-primary-light badge-hover"><i class="fas fa-book me-1"></i> "Eloquent JavaScript" (E-book)</span>
+                                    <span class="badge bg-primary-light badge-hover"><i class="fas fa-laptop-code me-1"></i> Interactive Coding Challenges</span>
+                                    <span class="badge bg-primary-light badge-hover"><i class="fas fa-chalkboard-teacher me-1"></i> Live Workshop: Building Responsive UIs (Tomorrow, 4 PM)</span>
+                                </div>
+                                
+                                <div class="alert alert-warning mt-3 animate-on-scroll" style="animation-delay: 0.3s">
+                                    <i class="fas fa-exclamation-circle me-2"></i> <strong>Upcoming Deadline:</strong> Complete Python Assessment by Sep 25
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Career Matches -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.3s">
+                            <div class="card-header">
+                                <span>💼 Your Top Career Matches</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 border-primary card-hover">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Software Developer</h5>
+                                                <p class="text-muted">94% match</p>
+                                                <p class="card-text">
+                                                    <i class="fas fa-rupee-sign me-2"></i> ₹8-15 LPA (Entry Level)<br>
+                                                    <i class="fas fa-chart-line me-2"></i> Very High Growth
+                                                </p>
+                                                <div class="skill-meter">
+                                                    <div class="skill-name">
+                                                        <span>Data Structures</span>
+                                                        <span>75%</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">Explore</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 card-hover">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Data Scientist</h5>
+                                                <p class="text-muted">88% match</p>
+                                                <p class="card-text">
+                                                    <i class="fas fa-rupee-sign me-2"></i> ₹10-18 LPA (Entry Level)<br>
+                                                    <i class="fas fa-chart-line me-2"></i> High Growth
+                                                </p>
+                                                <div class="skill-meter">
+                                                    <div class="skill-name">
+                                                        <span>Machine Learning</span>
+                                                        <span>65%</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">Explore</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card h-100 card-hover">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Product Manager</h5>
+                                                <p class="text-muted">82% match</p>
+                                                <p class="card-text">
+                                                    <i class="fas fa-rupee-sign me-2"></i> ₹12-20 LPA (Entry Level)<br>
+                                                    <i class="fas fa-chart-line me-2"></i> High Growth
+                                                </p>
+                                                <div class="skill-meter">
+                                                    <div class="skill-name">
+                                                        <span>Business Strategy</span>
+                                                        <span>70%</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 6px;">
+                                                        <div class="progress-bar" role="progressbar" style="width: 70%;" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                                <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">Explore</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="col-lg-4">
+                        <!-- Upcoming Deadlines -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.2s">
+                            <div class="card-header">
+                                <span>⏳ Upcoming Deadlines</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="event-card animate-on-scroll" style="animation-delay: 0.1s">
+                                    <div class="event-date bg-danger">
+                                        <div class="day">25</div>
+                                        <div class="month">SEP</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">Complete Python Assessment</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 11:59 PM
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-card animate-on-scroll" style="animation-delay: 0.2s">
+                                    <div class="event-date bg-warning">
+                                        <div class="day">28</div>
+                                        <div class="month">SEP</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">Web Development Project Submission</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 11:59 PM
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-card animate-on-scroll" style="animation-delay: 0.3s">
+                                    <div class="event-date bg-info">
+                                        <div class="day">02</div>
+                                        <div class="month">OCT</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">Career Counseling Session</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 3:00 PM - 4:00 PM
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-card animate-on-scroll" style="animation-delay: 0.4s">
+                                    <div class="event-date bg-secondary">
+                                        <div class="day">05</div>
+                                        <div class="month">OCT</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">College Fair: Top Engineering Colleges</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 10:00 AM - 4:00 PM
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Skill Analysis -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.3s">
+                            <div class="card-header">
+                                <span>📈 Your Skill Analysis</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">Details</a>
+                            </div>
+                            <div class="card-body">
+                                <h6>Top Skills</h6>
+                                <div class="skill-meter mb-3 animate-on-scroll" style="animation-delay: 0.1s">
+                                    <div class="skill-name">
+                                        <span>Problem Solving</span>
+                                        <span>95%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 95%;" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="skill-meter mb-3 animate-on-scroll" style="animation-delay: 0.2s">
+                                    <div class="skill-name">
+                                        <span>Logical Reasoning</span>
+                                        <span>93%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 93%;" aria-valuenow="93" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="skill-meter mb-3 animate-on-scroll" style="animation-delay: 0.3s">
+                                    <div class="skill-name">
+                                        <span>Programming</span>
+                                        <span>88%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 88%;" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                                
+                                <h6 class="mt-4">Skills to Develop</h6>
+                                <div class="skill-meter mb-3 animate-on-scroll" style="animation-delay: 0.4s">
+                                    <div class="skill-name">
+                                        <span>Machine Learning</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <small class="text-muted">High demand in your field</small>
+                                </div>
+                                
+                                <div class="skill-meter mb-3 animate-on-scroll" style="animation-delay: 0.5s">
+                                    <div class="skill-name">
+                                        <span>Cloud Computing</span>
+                                        <span>58%</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 58%;" aria-valuenow="58" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <small class="text-muted">Emerging requirement</small>
+                                </div>
+                                
+                                <button class="btn btn-outline-primary w-100 mt-2">Take Skill Assessment</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Recommended Courses -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.4s">
+                            <div class="card-header">
+                                <span>🎓 Recommended Courses</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3 animate-on-scroll" style="animation-delay: 0.1s">
+                                    <h6>B.Tech in Computer Science</h6>
+                                    <p class="text-muted small mb-1">IIT Bombay • 4 years</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="progress" style="width: 70%; height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 94%;" aria-valuenow="94" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-primary fw-bold">94%</small>
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">Apply Now</a>
+                                </div>
+                                
+                                <div class="mb-3 animate-on-scroll" style="animation-delay: 0.2s">
+                                    <h6>B.Sc in Data Science</h6>
+                                    <p class="text-muted small mb-1">IIIT Hyderabad • 3 years</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="progress" style="width: 70%; height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 91%;" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-primary fw-bold">91%</small>
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">Learn More</a>
+                                </div>
+                                
+                                <div class="animate-on-scroll" style="animation-delay: 0.3s">
+                                    <h6>B.E. in Artificial Intelligence</h6>
+                                    <p class="text-muted small mb-1">BITS Pilani • 4 years</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="progress" style="width: 70%; height: 6px;">
+                                            <div class="progress-bar" role="progressbar" style="width: 89%;" aria-valuenow="89" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small class="text-primary fw-bold">89%</small>
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-outline-primary w-100 mt-2">View Details</a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Upcoming Events -->
+                        <div class="card mb-4 card-hover animate-on-scroll" style="animation-delay: 0.5s">
+                            <div class="card-header">
+                                <span>📅 Upcoming Events</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="event-card animate-on-scroll" style="animation-delay: 0.1s">
+                                    <div class="event-date bg-primary">
+                                        <div class="day">25</div>
+                                        <div class="month">SEP</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">Webinar: "Future of Tech Careers"</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 6:00 PM - 7:30 PM
+                                        </div>
+                                        <div class="event-meta">
+                                            <i class="fas fa-user-tie me-1"></i> Dr. A. Sharma, CTO TechSolutions
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-primary mt-2">Register Now</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="event-card mt-3 pt-3 animate-on-scroll" style="animation-delay: 0.2s">
+                                    <div class="event-date bg-success">
+                                        <div class="day">05</div>
+                                        <div class="month">OCT</div>
+                                    </div>
+                                    <div class="event-details">
+                                        <div class="event-title">College Fair: Top Engineering Colleges</div>
+                                        <div class="event-meta">
+                                            <i class="far fa-clock me-1"></i> 10:00 AM - 4:00 PM
+                                        </div>
+                                        <div class="event-meta">
+                                            <i class="fas fa-map-marker-alt me-1"></i> Delhi
+                                        </div>
+                                        <button class="btn btn-sm btn-outline-success mt-2">Learn More</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="card card-hover animate-on-scroll" style="animation-delay: 0.4s">
+                    <div class="card-header">
+                        <span>🔍 Recent Activity</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary">View All</a>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="d-flex mb-3 animate-on-scroll" style="animation-delay: 0.1s">
+                                <div class="me-3">
+                                    <div class="bg-success bg-opacity-10 p-2 rounded-circle">
+                                        <i class="fas fa-check text-success"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Completed:</strong> Web Development Basics
+                                    <div class="text-muted small">September 20, 2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mb-3 animate-on-scroll" style="animation-delay: 0.2s">
+                                <div class="me-3">
+                                    <div class="bg-info bg-opacity-10 p-2 rounded-circle">
+                                        <i class="fas fa-clipboard-check text-info"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Assessment Taken:</strong> Logical Reasoning (Score: 92%)
+                                    <div class="text-muted small">September 18, 2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex mb-3 animate-on-scroll" style="animation-delay: 0.3s">
+                                <div class="me-3">
+                                    <div class="bg-warning bg-opacity-10 p-2 rounded-circle">
+                                        <i class="fas fa-trophy text-warning"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Achievement Unlocked:</strong> "Coding Prodigy" Badge
+                                    <div class="text-muted small">September 15, 2025</div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex animate-on-scroll" style="animation-delay: 0.4s">
+                                <div class="me-3">
+                                    <div class="bg-primary bg-opacity-10 p-2 rounded-circle">
+                                        <i class="fas fa-sync-alt text-primary"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <strong>Profile Update:</strong> Added 3 new skills
+                                    <div class="text-muted small">September 12, 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quote -->
+                <div class="quote text-center my-4 animate-on-scroll" style="animation-delay: 0.5s">
+                    "The future belongs to those who believe in the beauty of their dreams." - Eleanor Roosevelt
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Page load animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loaded class to body
+            document.body.classList.add('loaded');
+            
+            // Add loaded class to sidebar with a slight delay
+            setTimeout(() => {
+                document.querySelector('.sidebar').classList.add('loaded');
+            }, 100);
+            
+            // Add loaded class to main content with a slight delay
+            setTimeout(() => {
+                document.querySelector('.main-content').classList.add('loaded');
+            }, 300);
+            
+            // Add loaded class to welcome section
+            setTimeout(() => {
+                document.querySelector('.welcome-section').classList.add('loaded');
+            }, 500);
+            
+            // Initialize scroll animations
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.animate-on-scroll');
+                elements.forEach(element => {
+                    const elementPosition = element.getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (elementPosition < screenPosition) {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            // Run once on page load
+            animateOnScroll();
+            
+            // Run on scroll
+            window.addEventListener('scroll', animateOnScroll);
+            
+            // Animate progress bars on scroll into view
+            const progressBars = document.querySelectorAll('.progress-bar');
+            const animateProgressBars = function() {
+                progressBars.forEach(bar => {
+                    const barPosition = bar.closest('.card').getBoundingClientRect().top;
+                    const screenPosition = window.innerHeight / 1.3;
+                    
+                    if (barPosition < screenPosition) {
+                        const width = bar.getAttribute('aria-valuenow') + '%';
+                        bar.style.width = width;
+                    }
+                });
+            };
+            
+            // Run once on page load
+            setTimeout(animateProgressBars, 1000);
+            
+            // Run on scroll
+            window.addEventListener('scroll', animateProgressBars);
+            
+            // Add loading state to buttons
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!this.classList.contains('no-loading') && !this.querySelector('.loading-spinner')) {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = `<span class="loading-spinner"></span>${this.textContent}`;
+                        this.disabled = true;
+                        
+                        // Simulate loading (remove in production)
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.disabled = false;
+                            
+                            // Show success message
+                            if (this.textContent.includes('Apply') || this.textContent.includes('Register')) {
+                                const toast = document.createElement('div');
+                                toast.className = 'position-fixed bottom-0 end-0 m-3 p-3 bg-success text-white rounded shadow';
+                                toast.style.zIndex = '9999';
+                                toast.style.transition = 'all 0.3s ease';
+                                toast.innerHTML = `
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-check-circle me-2"></i>
+                                        <span>${this.textContent} request submitted successfully!</span>
+                                    </div>
+                                `;
+                                document.body.appendChild(toast);
+                                
+                                // Remove toast after 3 seconds
+                                setTimeout(() => {
+                                    toast.style.opacity = '0';
+                                    setTimeout(() => {
+                                        toast.remove();
+                                    }, 300);
+                                }, 3000);
+                            }
+                        }, 1500);
+                    }
+                });
+            });
+            
+            // Update last login time
+            const lastLogin = document.getElementById('last-login');
+            const now = new Date();
+            const options = { 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true
+            };
+            lastLogin.textContent = now.toLocaleDateString('en-US', options);
+            
+            // Add hover effect to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.1)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.05)';
+                });
+            });
+            
+            // Add ripple effect to buttons
+            const addRipple = function(e) {
+                const btn = e.currentTarget;
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.left = `${x}px`;
+                ripple.style.top = `${y}px`;
+                
+                btn.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 1000);
+            };
+            
+            const buttonsWithRipple = document.querySelectorAll('.btn:not(.no-ripple)');
+            buttonsWithRipple.forEach(button => {
+                button.addEventListener('click', addRipple);
+            });
+            
+            // Add animation to skill bars
+            const skillBars = document.querySelectorAll('.skill-meter');
+            skillBars.forEach((bar, index) => {
+                setTimeout(() => {
+                    bar.style.opacity = '1';
+                    bar.style.transform = 'translateX(0)';
+                }, 100 * index);
+            });
+            
+            // Add animation to event cards
+            const eventCards = document.querySelectorAll('.event-card');
+            eventCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateX(0)';
+                }, 100 * index);
+            });
+            
+            // Add smooth scroll to anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Add animation to table rows
+            const tableRows = document.querySelectorAll('tr');
+            tableRows.forEach((row, index) => {
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, 50 * index);
+            });
+        });
+    </script>
+</body>
+</html>
